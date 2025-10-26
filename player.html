@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Player</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #111;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+    header button {
+      background: #333;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+    }
+    .download {
+      background: #222;
+      padding: 10px;
+      text-align: center;
+    }
+    .download a {
+      background: #ff4444;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button onclick="window.location.href='index.html'">← Back</button>
+  <div>Video Player</div>
+</header>
+
+<iframe id="videoFrame" allowfullscreen></iframe>
+
+<div class="download">
+  <a id="downloadLink" target="_blank">Download Video</a>
+</div>
+
+<script>
+  // Get Mega link from URL (player.html?url=MEGA_LINK)
+  const params = new URLSearchParams(window.location.search);
+  const fileUrl = params.get('url');
+
+  // Auto convert /file/ to /embed/
+  const embedUrl = fileUrl.replace('/file/', '/embed/');
+
+  document.getElementById('videoFrame').src = embedUrl;
+  document.getElementById('downloadLink').href = fileUrl;
+</script>
+
+</body>
+</html>
