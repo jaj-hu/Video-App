@@ -1,88 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>My Video Website</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Video App</title>
   <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #111;
-    color: #fff;
-    margin: 0;
-    padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  #videos {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-  }
-  .video-card {
-    background: #1c1c1c;
-    border-radius: 10px;
-    padding: 15px;
-    width: 90%;
-    max-width: 380px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-  }
-  .video-card img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-  .watch-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: #ff4500;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 16px;
-  }
-  .watch-btn:hover {
-    background: #ff5e1a;
-  }
+    :root{
+      --bg:#0b0b0d;
+      --card:#121216;
+      --muted:#9aa0a6;
+      --accent:#ff3b2f;
+      --white:#ffffff;
+    }
+    html,body{height:100%; margin:0; font-family: Inter, Arial, sans-serif; background:var(--bg); color:var(--white);}
+    .wrap{max-width:980px; margin:0 auto; padding:18px;}
+    header{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+    .logo{font-weight:800; font-size:20px;}
+    .subtitle{color:var(--muted); font-size:13px;}
+    #videos{display:flex; flex-direction:column; gap:20px; align-items:center;padding-bottom:40px;}
+    .video-card{
+      width:100%;
+      max-width:820px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .thumb-wrap{display:block; width:100%; border-radius:10px; overflow:hidden; background:#000; display:flex; align-items:center; justify-content:center;}
+    .thumb-wrap img{width:100%; height:auto; display:block; object-fit:cover;}
+    .title{margin:10px 0 8px 0; font-size:18px; color:var(--white); line-height:1.2; font-weight:700; text-align:left;}
+    .meta{color:var(--muted); font-size:13px; margin-bottom:8px;}
+    .btn-row{display:flex; gap:10px; align-items:center;}
+    .watch-btn{
+      background:var(--accent);
+      color:var(--white);
+      padding:12px 20px;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:800;
+      font-size:16px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border: none;
+    }
+    .watch-btn:active{transform:scale(.995);}
+    .download-btn{
+      background: transparent;
+      color:var(--white);
+      padding:10px 14px;
+      border-radius:8px;
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,0.06);
+      font-size:14px;
+    }
+
+    /* responsive */
+    @media (max-width:720px){
+      .wrap{padding:14px;}
+      .title{font-size:16px;}
+      .watch-btn{width:100%; justify-content:center;}
+      .btn-row{flex-direction:column;}
+    }
+    /* small helper when image broken */
+    .img-broken{width:100%; height:200px; display:flex; align-items:center; justify-content:center; color:var(--muted); background:#080808;}
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div class="logo">My Videos</div>
+      <div class="subtitle">Latest first — tap Watch to play inside app</div>
+    </header>
 
-  <h1 style="text-align:center;">My Videos</h1>
-  <div id="videos"></div>
+    <main id="videos">
+      <!-- video cards injected here -->
+    </main>
 
-  <script>
-  async function loadVideos() {
-    const response = await fetch("videos.txt");
-    const text = await response.text();
-    const lines = text.trim().split("\n").reverse();
+    <div style="text-align:center; color:var(--muted); font-size:13px; margin-top:20px;">
+      Tips: Edit <code>videos.txt</code> in your repo — add new lines at the top for newest-first.
+    </div>
+  </div>
 
-    let container = document.getElementById("videos");
-
-    lines.forEach(line => {
-      const parts = line.split("|").map(x => x.trim());
-      const thumb = parts[0];
-      const link = parts[1];
-      const title = parts[2] || "Untitled";
-
-      const div = document.createElement("div");
-      div.className = "video-card";
-      div.innerHTML = `
-        <img src="${thumb}">
-        <h3>${title}</h3>
-        <a class="watch-btn" href="${link}" target="_blank">▶ Watch</a>
-      `;
-      container.appendChild(div);
-    });
+<script>
+(async function(){
+  // Fetch the videos.txt file that lives in the same repo
+  async function fetchLines(){
+    const resp = await fetch('videos.txt?_=' + Date.now());
+    if(!resp.ok) throw new Error('Could not load videos.txt');
+    const txt = await resp.text();
+    return txt.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
   }
 
-  loadVideos();
-</script>
+  function makeEmbedFromMega(url){
+    // if contains /file/ replace with /embed/
+    try {
+      if(!url) return url;
+      // trim whitespace
+      url = url.trim();
+      // If url already contains /embed/, keep it
+      if(url.includes('/embed/')) return url;
+      // Replace /file/ with /embed/
+      if(url.includes('/file/')) {
+        return url.replace('/file/','/embed/');
+      }
+      // If original is a folder or file with extra query, best-effort:
+      // Try to convert /#... pattern (not guaranteed)
+      return url;
+    } catch(e){ return url; }
+  }
 
+  function safeEncode(url){
+    // encode full url as query parameter value
+    return encodeURIComponent(url);
+  }
+
+  const container = document.getElementById('videos');
+
+  try {
+    const lines = await fetchLines();
+    // newest on top: we expect authors add newest at top already,
+    // but to be safe we will not reverse: we will treat file order as-author intends.
+    // If you prefer newest-first regardless, uncomment reverse() below.
+    // const ordered = lines.slice().reverse(); // uncomment to force newest-first
+    const ordered = lines.slice().reverse(); // we will show latest first (reverse file order)
+    for(const line of ordered){
+      // Expecting: thumb | mega | title
+      const parts = line.split('|').map(p=>p.trim());
+      const thumb = parts[0] || '';
+      const mega = parts[1] || '';
+      const title = parts[2] || '';
+
+      const card = document.createElement('article');
+      card.className = 'video-card';
+
+      // Thumbnail or placeholder
+      let thumbHtml = '';
+      if(thumb){
+        thumbHtml = `<div class="thumb-wrap"><img src="${thumb}" alt="${(title||'Video')}" onerror="this.style.display='none'; this.nextElementSibling && (this.nextElementSibling.style.display='block')"></div>`;
+      } else {
+        thumbHtml = `<div class="img-broken">No thumbnail</div>`;
+      }
+
+      // Build player URL — convert file -> embed
+      const embed = makeEmbedFromMega(mega);
+      // We will pass original mega link as download and embed link as iframe source via player.html
+      const playerUrl = 'player.html?url=' + safeEncode(mega);
+
+      card.innerHTML = `
+        ${thumbHtml}
+        <div style="padding:8px 2px 0 2px;">
+          <div class="title">${title || 'Untitled'}</div>
+          <div class="meta"></div>
+          <div class="btn-row">
+            <a class="watch-btn" href="${playerUrl}">▶ Watch</a>
+            <a class="download-btn" href="${mega}" target="_blank" rel="noopener">Download</a>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    }
+
+  } catch(err){
+    container.innerHTML = '<div style="color:#bbb; text-align:center; padding:30px;">Error loading videos: '+ (err.message||err) + '</div>';
+    console.error(err);
+  }
+})();
+</script>
 </body>
 </html>
