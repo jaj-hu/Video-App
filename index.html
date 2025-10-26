@@ -4,35 +4,51 @@
   <meta charset="UTF-8">
   <title>My Video Website</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-    }
-    .video-card {
-      background: white;
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    .video-card img {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 8px;
-    }
-    .watch-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-    }
+  body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #videos {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  .video-card {
+    background: #1c1c1c;
+    border-radius: 10px;
+    padding: 15px;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+  .video-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .watch-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #ff4500;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .watch-btn:hover {
+    background: #ff5e1a;
+  }
   </style>
 </head>
 <body>
