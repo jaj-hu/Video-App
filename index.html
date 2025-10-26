@@ -1,31 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>My Video Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .video-card {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .video-card img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+    }
+    .watch-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>My Videos</h1>
+
+  <h1 style="text-align:center;">My Videos</h1>
   <div id="videos"></div>
 
   <script>
     async function loadVideos() {
       const response = await fetch("videos.txt");
       const text = await response.text();
-      const lines = text.trim().split("\n");
+      const lines = text.trim().split("\n").reverse();
 
       let container = document.getElementById("videos");
-      lines.reverse(); // latest video at top
 
       lines.forEach(line => {
         const [thumb, link] = line.split("|").map(x => x.trim());
         const div = document.createElement("div");
+        div.className = "video-card";
         div.innerHTML = `
-          <div>
-            <img src="${thumb}" width="200"><br>
-            <a href="${link}" target="_blank">Watch</a>
-          </div>
-          <hr>
+          <img src="${thumb}">
+          <br>
+          <a class="watch-btn" href="${link}" target="_blank">▶ Watch</a>
         `;
         container.appendChild(div);
       });
@@ -33,5 +63,6 @@
 
     loadVideos();
   </script>
+
 </body>
 </html>
