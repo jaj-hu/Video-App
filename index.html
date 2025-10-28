@@ -4,174 +4,274 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>My Video App</title>
-  <h1>Anime Hub</h1>
-
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/0a91a2538eaae4b076a598f6826445f9/invoke.js"></script>
-</div>
   <style>
     :root{
-      --bg:#0b0b0d;
-      --card:#121216;
+      --bg:#070709;
+      --panel:#0f1113;
       --muted:#9aa0a6;
       --accent:#ff3b2f;
       --white:#ffffff;
+      --card-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
-    html,body{height:100%; margin:0; font-family: Inter, Arial, sans-serif; background:var(--bg); color:var(--white);}
-    .wrap{max-width:980px; margin:0 auto; padding:18px;}
-    header{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+    html,body{height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--white);}
+    .wrap{max-width:980px; margin:0 auto; padding:16px;}
+    header {display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;}
     .logo{font-weight:800; font-size:20px;}
     .subtitle{color:var(--muted); font-size:13px;}
-    #videos{display:flex; flex-direction:column; gap:20px; align-items:center;padding-bottom:40px;}
-    .video-card{
+    /* Accordion groups */
+    .group {
       width:100%;
-      max-width:820px;
       background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
       border-radius:12px;
-      padding:14px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+      margin-bottom:14px;
+      overflow:hidden;
+      box-shadow: var(--card-shadow);
       border:1px solid rgba(255,255,255,0.03);
     }
-    .thumb-wrap{display:block; width:100%; border-radius:10px; overflow:hidden; background:#000; display:flex; align-items:center; justify-content:center;}
-    .thumb-wrap img{width:100%; height:auto; display:block; object-fit:cover;}
-    .title{margin:10px 0 8px 0; font-size:18px; color:var(--white); line-height:1.2; font-weight:700; text-align:left;}
-    .meta{color:var(--muted); font-size:13px; margin-bottom:8px;}
-    .btn-row{display:flex; gap:10px; align-items:center;}
-    .watch-btn{
-      background:var(--accent);
-      color:var(--white);
-      padding:12px 20px;
-      border-radius:8px;
-      text-decoration:none;
-      font-weight:800;
-      font-size:16px;
-      display:inline-flex;
+    .group-header {
+      display:flex;
       align-items:center;
-      gap:10px;
-      border: none;
+      justify-content:space-between;
+      padding:14px;
+      cursor:pointer;
+      gap:12px;
+      user-select:none;
+      background:transparent;
     }
-    .watch-btn:active{transform:scale(.995);}
-    .download-btn{
-      background: transparent;
+    .group-title {
+      font-size:18px;
+      font-weight:700;
+      color:var(--white);
+    }
+    .group-toggle {
+      width:38px; height:38px; border-radius:8px; background:rgba(255,255,255,0.02);
+      display:flex; align-items:center; justify-content:center; color:var(--muted);
+      transition: transform .28s ease;
+    }
+    .group-toggle.open { transform:rotate(180deg); color:var(--white); background: rgba(255,255,255,0.02); }
+
+    /* Panel for episodes - animate height and opacity */
+    .panel {
+      overflow: hidden;
+      transition: max-height .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
+      opacity:0;
+      max-height:0;
+      padding:0 14px;
+      background:transparent;
+    }
+    .panel.open {
+      opacity:1;
+      max-height:2000px; /* large enough to show content */
+      padding:6px 14px 14px 14px;
+    }
+
+    /* Episode row - style A: thumbnail + title + watch button */
+    .episode-row {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:10px 6px;
+      border-radius:8px;
+      transition: background .18s ease;
+    }
+    .episode-row:hover { background: rgba(255,255,255,0.02); }
+    .ep-thumb {
+      width:88px; height:52px; border-radius:6px; overflow:hidden; flex:0 0 88px; background:#000;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .ep-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .ep-info { flex:1; min-width:0; }
+    .ep-title { font-size:15px; font-weight:700; color:var(--white); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ep-sub { font-size:12px; color:var(--muted); }
+
+    .ep-actions { flex:0 0 auto; display:flex; gap:8px; align-items:center; }
+    .watch-btn {
+      background:var(--accent);
       color:var(--white);
       padding:10px 14px;
       border-radius:8px;
       text-decoration:none;
-      border:1px solid rgba(255,255,255,0.06);
+      font-weight:800;
       font-size:14px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
     }
+    .download-btn {
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--white);
+      padding:8px 10px;
+      border-radius:8px;
+      text-decoration:none;
+      font-size:13px;
+    }
+
+    /* divider */
+    .sep { height:1px; background:rgba(255,255,255,0.02); margin:6px 0; border-radius:2px; }
 
     /* responsive */
     @media (max-width:720px){
-      .wrap{padding:14px;}
-      .title{font-size:16px;}
-      .watch-btn{width:100%; justify-content:center;}
-      .btn-row{flex-direction:column;}
+      .ep-thumb { width:84px; height:48px; }
+      .watch-btn { padding:9px 12px; font-size:13px; }
+      .group-title { font-size:16px; }
     }
-    /* small helper when image broken */
-    .img-broken{width:100%; height:200px; display:flex; align-items:center; justify-content:center; color:var(--muted); background:#080808;}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="logo">ANIME HUB</div>
-      <div class="subtitle">Latest first</div>
+      <div>
+        <div class="logo">My Videos</div>
+        <div class="subtitle">Grouped by show (tap a row to expand)</div>
+      </div>
     </header>
 
-    <main id="videos">
-      <!-- video cards injected here -->
+    <main id="groupsContainer">
+      <!-- Groups injected here -->
     </main>
 
-    <div style="text-align:center; color:var(--muted); font-size:13px; margin-top:20px;">
-    Join Our Telegram Channel 
+    <div style="text-align:center; color:var(--muted); font-size:13px; margin-top:14px;">
+      Add new lines to <code>videos.txt</code> in this repo in the format:<br>
+      <code>THUMB_URL | LINK (YouTube or MEGA) | Anime Name Season X - Episode Y</code>
     </div>
   </div>
 
 <script>
 (async function(){
-  // Fetch the videos.txt file that lives in the same repo
+  const container = document.getElementById('groupsContainer');
+
   async function fetchLines(){
-    const resp = await fetch('videos.txt?_=' + Date.now());
-    if(!resp.ok) throw new Error('Could not load videos.txt');
-    const txt = await resp.text();
+    const r = await fetch('videos.txt?_=' + Date.now());
+    if(!r.ok) throw new Error('Could not load videos.txt');
+    const txt = await r.text();
     return txt.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
   }
 
-  function makeEmbedFromMega(url){
-    // if contains /file/ replace with /embed/
-    try {
-      if(!url) return url;
-      // trim whitespace
-      url = url.trim();
-      // If url already contains /embed/, keep it
-      if(url.includes('/embed/')) return url;
-      // Replace /file/ with /embed/
-      if(url.includes('/file/')) {
-        return url.replace('/file/','/embed/');
-      }
-      // If original is a folder or file with extra query, best-effort:
-      // Try to convert /#... pattern (not guaranteed)
-      return url;
-    } catch(e){ return url; }
+  // Group key extractor: use everything before ' - ' (dash with spaces) as group title
+  function groupKeyFromTitle(title){
+    if(!title) return 'Other';
+    if(title.includes(' - ')) return title.split(' - ')[0].trim();
+    // fallback: try to detect "Season"
+    const sIdx = title.toLowerCase().indexOf('season');
+    if(sIdx !== -1){
+      // get words upto "Episode" or full if not present
+      const epIdx = title.toLowerCase().indexOf('episode');
+      if(epIdx !== -1) return title.substring(0, epIdx).trim();
+      return title.trim();
+    }
+    // else just return first part or full title
+    return title.trim();
   }
-
-  function safeEncode(url){
-    // encode full url as query parameter value
-    return encodeURIComponent(url);
-  }
-
-  const container = document.getElementById('videos');
 
   try {
     const lines = await fetchLines();
-    // newest on top: we expect authors add newest at top already,
-    // but to be safe we will not reverse: we will treat file order as-author intends.
-    // If you prefer newest-first regardless, uncomment reverse() below.
-    // const ordered = lines.slice().reverse(); // uncomment to force newest-first
-    const ordered = lines.slice().reverse(); // we will show latest first (reverse file order)
-    for(const line of ordered){
-      // Expecting: thumb | mega | title
+    // newest-first: treat file order as oldest->newest typically, so reverse to show newest first
+    const ordered = lines.slice().reverse();
+
+    // parse into entries
+    const entries = ordered.map(line => {
       const parts = line.split('|').map(p=>p.trim());
-      const thumb = parts[0] || '';
-      const mega = parts[1] || '';
-      const title = parts[2] || '';
+      return { thumb: parts[0]||'', link: parts[1]||'', title: parts[2]||'Untitled' };
+    });
 
-      const card = document.createElement('article');
-      card.className = 'video-card';
-
-      // Thumbnail or placeholder
-      let thumbHtml = '';
-      if(thumb){
-        thumbHtml = `<div class="thumb-wrap"><img src="${thumb}" alt="${(title||'Video')}" onerror="this.style.display='none'; this.nextElementSibling && (this.nextElementSibling.style.display='block')"></div>`;
-      } else {
-        thumbHtml = `<div class="img-broken">No thumbnail</div>`;
+    // group preserving insertion order
+    const groups = [];
+    const map = new Map();
+    for(const e of entries){
+      const key = groupKeyFromTitle(e.title);
+      if(!map.has(key)){
+        map.set(key, []);
+        groups.push(key);
       }
-
-      // Build player URL — convert file -> embed
-      const embed = makeEmbedFromMega(mega);
-      // We will pass original mega link as download and embed link as iframe source via player.html
-      const playerUrl = 'player.html?url=' + safeEncode(mega);
-
-      card.innerHTML = `
-        ${thumbHtml}
-        <div style="padding:8px 2px 0 2px;">
-          <div class="title">${title || 'Untitled'}</div>
-          <div class="meta"></div>
-          <div class="btn-row">
-            <a class="watch-btn" href="${playerUrl}">▶ Watch</a>
-            <a class="download-btn" href="${mega}" target="_blank" rel="noopener">Download</a>
-          </div>
-        </div>
-      `;
-
-      container.appendChild(card);
+      map.get(key).push(e);
     }
 
+    // build DOM for each group (first group open)
+    groups.forEach((key, idx) => {
+      const items = map.get(key) || [];
+
+      const groupEl = document.createElement('section');
+      groupEl.className = 'group';
+
+      // header
+      const header = document.createElement('div');
+      header.className = 'group-header';
+      header.innerHTML = `
+        <div style="display:flex; flex-direction:column;">
+          <div class="group-title">${key}</div>
+          <div class="ep-sub" style="margin-top:6px; color:var(--muted); font-size:13px;">${items.length} episode${items.length>1?'s':''}</div>
+        </div>
+        <div class="group-toggle ${idx===0?'open':''}" aria-expanded="${idx===0? 'true':'false'}">▾</div>
+      `;
+      groupEl.appendChild(header);
+
+      // panel
+      const panel = document.createElement('div');
+      panel.className = 'panel ' + (idx===0 ? 'open' : '');
+      // episodes
+      items.forEach((ep, i) => {
+        const row = document.createElement('div');
+        row.className = 'episode-row';
+        row.innerHTML = `
+          <div class="ep-thumb"><img src="${ep.thumb}" alt="${ep.title}" onerror="this.src=''; this.parentElement.style.background='#0b0b0b'"></div>
+          <div class="ep-info">
+            <div class="ep-title">${ep.title}</div>
+          </div>
+          <div class="ep-actions">
+            <a class="watch-btn" href="player.html?url=${encodeURIComponent(ep.link)}&title=${encodeURIComponent(ep.title)}">▶ Watch</a>
+            <a class="download-btn" href="${ep.link}" target="_blank" rel="noopener">Download</a>
+          </div>
+        `;
+        panel.appendChild(row);
+        if(i < items.length-1){
+          const sep = document.createElement('div');
+          sep.className = 'sep';
+          panel.appendChild(sep);
+        }
+      });
+
+      groupEl.appendChild(panel);
+      container.appendChild(groupEl);
+
+      // header toggle behavior (fade + slide)
+      header.addEventListener('click', function(){
+        const isOpen = panel.classList.contains('open');
+        // close all other groups if opening this (optional: keep others closed)
+        document.querySelectorAll('.panel.open').forEach(p=>{
+          if(p !== panel){
+            p.classList.remove('open');
+            const t = p.previousElementSibling.querySelector('.group-toggle');
+            if(t) t.classList.remove('open');
+            t && t.setAttribute('aria-expanded','false');
+            p.style.maxHeight = null;
+          }
+        });
+
+        if(isOpen){
+          panel.classList.remove('open');
+          header.querySelector('.group-toggle').classList.remove('open');
+          header.querySelector('.group-toggle').setAttribute('aria-expanded','false');
+        } else {
+          panel.classList.add('open');
+          header.querySelector('.group-toggle').classList.add('open');
+          header.querySelector('.group-toggle').setAttribute('aria-expanded','true');
+          // smooth open: set maxHeight based on scrollHeight
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+      });
+
+      // ensure first group panel height set
+      if(idx===0){
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+
   } catch(err){
-    container.innerHTML = '<div style="color:#bbb; text-align:center; padding:30px;">Error loading videos: '+ (err.message||err) + '</div>';
+    container.innerHTML = `<div style="padding:20px; text-align:center; color:var(--muted);">Error loading videos: ${err.message || err}</div>`;
     console.error(err);
   }
+
 })();
 </script>
 </body>
