@@ -11,48 +11,69 @@
       --muted:#9aa0a6;
       --accent:#ff3b2f;
       --white:#ffffff;
-      --card-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
     html,body{height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--white);}
-    .wrap{max-width:980px; margin:0 auto; padding:16px;}
+    .wrap{max-width:980px; margin:0 auto; padding:12px;}
     header {display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;}
     .logo{font-weight:800; font-size:20px;}
     .subtitle{color:var(--muted); font-size:13px;}
-    /* Accordion groups */
+    /* Group card */
     .group {
       width:100%;
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
-      border-radius:12px;
-      margin-bottom:14px;
+      border-radius:14px;
+      margin-bottom:18px;
       overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
       box-shadow: var(--card-shadow);
       border:1px solid rgba(255,255,255,0.03);
     }
-    .group-header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px;
-      cursor:pointer;
-      gap:12px;
-      user-select:none;
-      background:transparent;
+    /* Hero banner */
+    .group-hero {
+      position:relative;
+      width:100%;
+      height:170px;
+      display:block;
+      overflow:hidden;
+      background:#090909;
     }
-    .group-title {
-      font-size:18px;
-      font-weight:700;
-      color:var(--white);
+    .group-hero .bg {
+      position:absolute; inset:0; background-position:center; background-size:cover;
+      filter: blur(18px) saturate(1.05); transform:scale(1.05);
+      opacity:0.85;
+    }
+    .group-hero .overlay {
+      position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.65));
+    }
+    .group-hero .poster {
+      position:absolute; left:18px; top:50%; transform:translateY(-50%);
+      width:120px; height:160px; border-radius:10px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.6); z-index:6;
+      background:#000; display:flex; align-items:center; justify-content:center;
+    }
+    .group-hero .poster img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .group-hero .meta {
+      position:absolute; left:150px; top:50%; transform:translateY(-50%); z-index:6; color:var(--white);
+      max-width:calc(100% - 180px); padding-right:16px;
+    }
+    .group-hero .meta .title { font-size:20px; font-weight:800; margin-bottom:6px; }
+    .group-hero .meta .sub { color:var(--muted); font-size:13px; }
+
+    /* Header (click to expand) */
+    .group-header {
+      display:flex; align-items:center; justify-content:space-between; padding:12px 14px; cursor:pointer;
+      background:transparent; user-select:none; gap:12px;
     }
     .group-toggle {
-      width:38px; height:38px; border-radius:8px; background:rgba(255,255,255,0.02);
+      width:36px; height:36px; border-radius:8px; background:rgba(255,255,255,0.02);
       display:flex; align-items:center; justify-content:center; color:var(--muted);
       transition: transform .28s ease;
     }
-    .group-toggle.open { transform:rotate(180deg); color:var(--white); background: rgba(255,255,255,0.02); }
+    .group-toggle.open { transform:rotate(180deg); color:var(--white); }
 
-    /* Panel for episodes - animate height and opacity */
+    /* Panel animation */
     .panel {
-      overflow: hidden;
+      overflow:hidden;
       transition: max-height .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
       opacity:0;
       max-height:0;
@@ -61,24 +82,16 @@
     }
     .panel.open {
       opacity:1;
-      max-height:2000px; /* large enough to show content */
-      padding:6px 14px 14px 14px;
+      max-height:2000px;
+      padding:8px 14px 16px 14px;
     }
 
-    /* Episode row - style A: thumbnail + title + watch button */
+    /* Episode row */
     .episode-row {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:10px 6px;
-      border-radius:8px;
-      transition: background .18s ease;
+      display:flex; align-items:center; gap:12px; padding:10px 6px; border-radius:8px; transition: background .14s ease;
     }
     .episode-row:hover { background: rgba(255,255,255,0.02); }
-    .ep-thumb {
-      width:88px; height:52px; border-radius:6px; overflow:hidden; flex:0 0 88px; background:#000;
-      display:flex; align-items:center; justify-content:center;
-    }
+    .ep-thumb { width:86px; height:52px; border-radius:6px; overflow:hidden; flex:0 0 86px; background:#000; display:flex; align-items:center; justify-content:center; }
     .ep-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
     .ep-info { flex:1; min-width:0; }
     .ep-title { font-size:15px; font-weight:700; color:var(--white); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -86,35 +99,20 @@
 
     .ep-actions { flex:0 0 auto; display:flex; gap:8px; align-items:center; }
     .watch-btn {
-      background:var(--accent);
-      color:var(--white);
-      padding:10px 14px;
-      border-radius:8px;
-      text-decoration:none;
-      font-weight:800;
-      font-size:14px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      background:var(--accent); color:var(--white); padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:800; font-size:14px;
+      display:inline-flex; align-items:center; gap:8px;
     }
-    .download-btn {
-      background:transparent;
-      border:1px solid rgba(255,255,255,0.06);
-      color:var(--white);
-      padding:8px 10px;
-      border-radius:8px;
-      text-decoration:none;
-      font-size:13px;
-    }
+    .download-btn { background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--white); padding:8px 10px; border-radius:8px; text-decoration:none; font-size:13px; }
 
-    /* divider */
-    .sep { height:1px; background:rgba(255,255,255,0.02); margin:6px 0; border-radius:2px; }
+    .sep { height:1px; background:rgba(255,255,255,0.02); margin:8px 0; border-radius:2px; }
 
     /* responsive */
     @media (max-width:720px){
-      .ep-thumb { width:84px; height:48px; }
+      .group-hero { height:160px; }
+      .group-hero .poster { width:96px; height:128px; left:14px; }
+      .group-hero .meta { left:118px; }
+      .ep-thumb { width:76px; height:46px; }
       .watch-btn { padding:9px 12px; font-size:13px; }
-      .group-title { font-size:16px; }
     }
   </style>
 </head>
@@ -123,16 +121,14 @@
     <header>
       <div>
         <div class="logo">My Videos</div>
-        <div class="subtitle">Grouped by show (tap a row to expand)</div>
+        <div class="subtitle">Grouped by show — tap to expand</div>
       </div>
     </header>
 
-    <main id="groupsContainer">
-      <!-- Groups injected here -->
-    </main>
+    <main id="groupsContainer"></main>
 
     <div style="text-align:center; color:var(--muted); font-size:13px; margin-top:14px;">
-      Add new lines to <code>videos.txt</code> in this repo in the format:<br>
+      Add new lines to <code>videos.txt</code> as: <br>
       <code>THUMB_URL | LINK (YouTube or MEGA) | Anime Name Season X - Episode Y</code>
     </div>
   </div>
@@ -148,68 +144,73 @@
     return txt.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
   }
 
-  // Group key extractor: use everything before ' - ' (dash with spaces) as group title
   function groupKeyFromTitle(title){
     if(!title) return 'Other';
     if(title.includes(' - ')) return title.split(' - ')[0].trim();
-    // fallback: try to detect "Season"
     const sIdx = title.toLowerCase().indexOf('season');
     if(sIdx !== -1){
-      // get words upto "Episode" or full if not present
       const epIdx = title.toLowerCase().indexOf('episode');
       if(epIdx !== -1) return title.substring(0, epIdx).trim();
       return title.trim();
     }
-    // else just return first part or full title
     return title.trim();
   }
 
   try {
     const lines = await fetchLines();
-    // newest-first: treat file order as oldest->newest typically, so reverse to show newest first
+    // We show newest first (reverse file order)
     const ordered = lines.slice().reverse();
 
-    // parse into entries
     const entries = ordered.map(line => {
       const parts = line.split('|').map(p=>p.trim());
       return { thumb: parts[0]||'', link: parts[1]||'', title: parts[2]||'Untitled' };
     });
 
-    // group preserving insertion order
     const groups = [];
     const map = new Map();
     for(const e of entries){
       const key = groupKeyFromTitle(e.title);
-      if(!map.has(key)){
-        map.set(key, []);
-        groups.push(key);
-      }
+      if(!map.has(key)){ map.set(key, []); groups.push(key); }
       map.get(key).push(e);
     }
 
-    // build DOM for each group (first group open)
     groups.forEach((key, idx) => {
       const items = map.get(key) || [];
+      // use first episode thumb as hero image (items[0] is newest-first)
+      const heroThumb = items[0] && items[0].thumb ? items[0].thumb : '';
 
       const groupEl = document.createElement('section');
       groupEl.className = 'group';
 
-      // header
+      // Hero
+      const hero = document.createElement('div');
+      hero.className = 'group-hero';
+      hero.innerHTML = `
+        <div class="bg" style="background-image:url('${heroThumb}');"></div>
+        <div class="overlay"></div>
+        <div class="poster"><img src="${heroThumb}" alt="${key}" onerror="this.style.display='none'; this.parentElement.style.display='none'"></div>
+        <div class="meta">
+          <div class="title">${key}</div>
+          <div class="sub">${items.length} episode${items.length>1? 's':''}</div>
+        </div>
+      `;
+      groupEl.appendChild(hero);
+
+      // Header (small, used to toggle)
       const header = document.createElement('div');
       header.className = 'group-header';
       header.innerHTML = `
-        <div style="display:flex; flex-direction:column;">
-          <div class="group-title">${key}</div>
-          <div class="ep-sub" style="margin-top:6px; color:var(--muted); font-size:13px;">${items.length} episode${items.length>1?'s':''}</div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-weight:700; font-size:16px;">${key}</div>
+          <div style="color:var(--muted); font-size:13px;">${items.length} ep${items.length>1?'s':''}</div>
         </div>
         <div class="group-toggle ${idx===0?'open':''}" aria-expanded="${idx===0? 'true':'false'}">▾</div>
       `;
       groupEl.appendChild(header);
 
-      // panel
+      // Panel with episodes
       const panel = document.createElement('div');
       panel.className = 'panel ' + (idx===0 ? 'open' : '');
-      // episodes
       items.forEach((ep, i) => {
         const row = document.createElement('div');
         row.className = 'episode-row';
@@ -217,6 +218,7 @@
           <div class="ep-thumb"><img src="${ep.thumb}" alt="${ep.title}" onerror="this.src=''; this.parentElement.style.background='#0b0b0b'"></div>
           <div class="ep-info">
             <div class="ep-title">${ep.title}</div>
+            <div class="ep-sub">${ep.link.includes('mega.nz') ? 'MEGA (download)' : 'YouTube'}</div>
           </div>
           <div class="ep-actions">
             <a class="watch-btn" href="player.html?url=${encodeURIComponent(ep.link)}&title=${encodeURIComponent(ep.title)}">▶ Watch</a>
@@ -225,19 +227,16 @@
         `;
         panel.appendChild(row);
         if(i < items.length-1){
-          const sep = document.createElement('div');
-          sep.className = 'sep';
-          panel.appendChild(sep);
+          const sep = document.createElement('div'); sep.className='sep'; panel.appendChild(sep);
         }
       });
-
       groupEl.appendChild(panel);
       container.appendChild(groupEl);
 
-      // header toggle behavior (fade + slide)
+      // Toggle behavior: fade + slide
       header.addEventListener('click', function(){
         const isOpen = panel.classList.contains('open');
-        // close all other groups if opening this (optional: keep others closed)
+        // close other panels
         document.querySelectorAll('.panel.open').forEach(p=>{
           if(p !== panel){
             p.classList.remove('open');
@@ -247,7 +246,6 @@
             p.style.maxHeight = null;
           }
         });
-
         if(isOpen){
           panel.classList.remove('open');
           header.querySelector('.group-toggle').classList.remove('open');
@@ -256,22 +254,20 @@
           panel.classList.add('open');
           header.querySelector('.group-toggle').classList.add('open');
           header.querySelector('.group-toggle').setAttribute('aria-expanded','true');
-          // smooth open: set maxHeight based on scrollHeight
           panel.style.maxHeight = panel.scrollHeight + "px";
+          // scroll into view (nice UX on mobile)
+          setTimeout(()=> header.scrollIntoView({behavior:'smooth', block:'start'}), 260);
         }
       });
 
-      // ensure first group panel height set
-      if(idx===0){
-        panel.style.maxHeight = panel.scrollHeight + "px";
-      }
+      // ensure first open panel height
+      if(idx===0) panel.style.maxHeight = panel.scrollHeight + "px";
     });
 
   } catch(err){
     container.innerHTML = `<div style="padding:20px; text-align:center; color:var(--muted);">Error loading videos: ${err.message || err}</div>`;
     console.error(err);
   }
-
 })();
 </script>
 </body>
