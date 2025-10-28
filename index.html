@@ -1,181 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My Video App</title>
-  <style>
-    :root{
-      --bg:#070709;
-      --panel:#0f1113;
-      --muted:#9aa0a6;
-      --accent:#ff3b2f;
-      --white:#ffffff;
-      --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-    html,body{height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--white);}
-    .wrap{max-width:980px; margin:0 auto; padding:12px;}
-    header {display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;}
-    .logo{font-weight:800; font-size:20px;}
-    .subtitle{color:var(--muted); font-size:13px;}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>My Video App</title>
+<style>
+  :root{
+    --bg:#000;
+    --panel:#0f1113;
+    --muted:#9aa0a6;
+    --accent:#ff3b2f;
+    --white:#fff;
+    --card-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  }
+  html,body{height:100%; margin:0; font-family:Inter,Arial,sans-serif; background:var(--bg); color:var(--white);}
+  .wrap{max-width:980px; margin:0 auto; padding:12px;}
+  header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;}
+  .logo{font-weight:800; font-size:20px;}
+  .subtitle{color:var(--muted); font-size:13px;}
 
-    /* Group (banner) */
-    .group {
-      width:100%;
-      margin-bottom:18px;
-      border-radius:12px;
-      overflow:hidden;
-      position:relative;
-      box-shadow: var(--card-shadow);
-      border:1px solid rgba(255,255,255,0.03);
-    }
-    .group-hero {
-      position:relative;
-      width:100%;
-      height:280px;           /* user selected */
-      overflow:hidden;
-      background:#090909;
-    }
-    .group-hero .bg {
-      position:absolute; inset:0; background-position:center; background-size:cover;
-      filter: blur(18px) saturate(1.05); transform:scale(1.07);
-      opacity:0.84;
-    }
-    .group-hero .overlay {
-      position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.65));
-    }
-    .group-hero .poster {
-      position:absolute; left:22px; top:50%; transform:translateY(-50%);
-      width:140px; height:210px; border-radius:10px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.6); z-index:6;
-      background:#000; display:flex; align-items:center; justify-content:center;
-    }
-    .group-hero .poster img { width:100%; height:100%; object-fit:cover; display:block; }
-    .group-hero .meta {
-      position:absolute; left:180px; top:50%; transform:translateY(-50%); z-index:6; color:var(--white);
-      max-width:calc(100% - 220px); padding-right:18px;
-    }
-    .group-hero .meta .title { font-size:22px; font-weight:800; margin-bottom:6px; }
-    .group-hero .meta .sub { color:var(--muted); font-size:13px; }
+  /* hero top */
+  .hero {
+    display:block;
+    width:100%;
+    border-radius:12px;
+    overflow:hidden;
+    background:#090909;
+    margin-bottom:18px;
+    box-shadow:var(--card-shadow);
+    border:1px solid rgba(255,255,255,0.03);
+    transform: translateY(12px);
+    opacity:0;
+    transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease;
+  }
+  .hero.show { transform:translateY(0); opacity:1; }
+  .hero img{ display:block; width:100%; height:auto; object-fit:contain; }
 
-    /* clickable banner overlay */
-    .banner-click {
-      position:absolute; inset:0; z-index:8; cursor:pointer;
-    }
+  .hero-title{ padding:10px 6px; color:var(--white); font-weight:700; font-size:18px; text-align:left; }
 
-    /* modal */
-    .modal-backdrop {
-      position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; z-index:2000; align-items:center; justify-content:center;
-      transition:opacity .22s ease;
-    }
-    .modal-backdrop.open { display:flex; }
-    .modal {
-      width:92%; max-width:720px; background:var(--panel); border-radius:12px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,0.7);
-      transform:translateY(18px); transition:transform .25s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
-      max-height:86vh; display:flex; flex-direction:column;
-    }
-    .modal.open { transform:translateY(0); }
-    .modal-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,0.03); }
-    .modal-title { font-size:18px; font-weight:800; }
-    .modal-close { background:transparent; color:var(--white); border:none; font-size:20px; cursor:pointer; padding:8px; border-radius:8px; }
-    .modal-body { overflow:auto; padding:14px; }
+  /* groups */
+  .groups { display:flex; flex-direction:column; gap:18px; margin-bottom:30px; }
+  .group {
+    border-radius:12px; overflow:hidden; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+    box-shadow:var(--card-shadow); border:1px solid rgba(255,255,255,0.03);
+    transform: translateY(12px); opacity:0; transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease;
+  }
+  .group.show { transform:translateY(0); opacity:1; }
+  .group-hero { width:100%; display:block; overflow:hidden; }
+  .group-hero img{ width:100%; height:auto; display:block; object-fit:contain; }
+  .group-title { padding:10px 12px; font-weight:700; font-size:16px; color:var(--white); }
 
-    /* episode row in modal (medium poster) */
-    .ep-row { display:flex; gap:12px; align-items:center; padding:10px 6px; border-radius:8px; transition:background .12s ease; }
-    .ep-row:hover { background: rgba(255,255,255,0.02); }
-    .ep-thumb { width:120px; height:72px; border-radius:8px; overflow:hidden; flex:0 0 120px; background:#000; display:flex; align-items:center; justify-content:center; }
-    .ep-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-    .ep-info { flex:1; min-width:0; }
-    .ep-title { font-size:15px; font-weight:700; color:var(--white); margin-bottom:6px; }
-    .ep-sub { font-size:13px; color:var(--muted); margin-bottom:6px; }
-    .ep-actions { display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex:0 0 auto; }
-    .watch-btn {
-      background:var(--accent); color:var(--white); padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:800; font-size:14px;
-    }
-    .download-small { background:transparent; border:none; color:var(--muted); font-size:13px; cursor:pointer; text-decoration:underline; }
+  /* modal (fullscreen) */
+  .modal-backdrop{ position:fixed; inset:0; display:none; background:rgba(0,0,0,0.7); z-index:2000; align-items:center; justify-content:center; }
+  .modal-backdrop.open{ display:flex; }
+  .modal{ width:100%; max-width:980px; height:100%; background:var(--panel); border-radius:0; overflow:auto; display:flex; flex-direction:column; }
+  .modal-top { position:relative; }
+  .modal-top img{ width:100%; height:auto; display:block; object-fit:contain; }
+  .modal-title { padding:12px; font-weight:800; font-size:20px; color:var(--white); }
+  .modal-body{ padding:12px; overflow:auto; flex:1; }
 
-    /* swipe handle area on modal top */
-    .swipe-handle { width:44px; height:6px; border-radius:6px; background:rgba(255,255,255,0.06); margin:8px auto; }
+  /* episode list in modal (thumbnail row) */
+  .ep-row{ display:flex; gap:12px; align-items:center; padding:10px 6px; border-radius:8px; transition: background .12s ease; }
+  .ep-row:hover{ background: rgba(255,255,255,0.02); }
+  .ep-thumb{ width:120px; height:72px; border-radius:8px; overflow:hidden; background:#000; display:flex; align-items:center; justify-content:center; flex:0 0 120px; }
+  .ep-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .ep-info{ flex:1; min-width:0; }
+  .ep-title{ font-weight:700; font-size:15px; }
+  .ep-sub{ color:var(--muted); font-size:13px; margin-top:6px; }
+  .ep-actions{ display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+  .watch-btn{ background:var(--accent); color:var(--white); padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:800; font-size:14px; }
+  .download-small{ color:var(--muted); font-size:13px; text-decoration:underline; background:none; border:none; cursor:pointer; }
 
-    @media (max-width:720px){
-      .group-hero { height:220px; }
-      .group-hero .poster { width:110px; height:160px; left:14px; }
-      .group-hero .meta { left:136px; }
-      .ep-thumb { width:100px; height:60px; }
-    }
-  </style>
+  /* small loading */
+  .loading{ text-align:center; color:var(--muted); padding:18px; font-size:15px; }
+
+  @media (max-width:720px){
+    .ep-thumb{ width:96px; height:56px; }
+    .watch-btn{ padding:9px 12px; }
+  }
+</style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div>
         <div class="logo">My Videos</div>
-        <div class="subtitle">Tap a banner to open season</div>
+        <div class="subtitle">Preparing your anime...</div>
       </div>
     </header>
 
-    <main id="groupsContainer"></main>
-
-    <div style="text-align:center; color:var(--muted); font-size:13px; margin-top:14px;">
-      Add new lines to <code>videos.txt</code> as:<br>
-      <code>THUMB_URL | LINK (YouTube or MEGA) | Anime Name Season X - Episode Y</code>
-    </div>
+    <main id="appContent">
+      <div id="loading" class="loading">Preparing your anime...</div>
+      <!-- hero + groups injected here -->
+      <div id="heroContainer"></div>
+      <div class="groups" id="groupsContainer"></div>
+    </main>
   </div>
 
-  <!-- Modal structure (hidden until opened) -->
+  <!-- Modal -->
   <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
-    <div id="modal" class="modal" role="dialog" aria-modal="true">
-      <div class="swipe-handle" id="swipeHandle"></div>
-      <div class="modal-header">
-        <div class="modal-title" id="modalTitle">Season</div>
-        <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body" id="modalBody">
-        <!-- episodes injected here -->
-      </div>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-top" id="modalTop"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
 
 <script>
 (async function(){
-  const container = document.getElementById('groupsContainer');
+  const loadingEl = document.getElementById('loading');
+  const heroContainer = document.getElementById('heroContainer');
+  const groupsContainer = document.getElementById('groupsContainer');
   const modalBackdrop = document.getElementById('modalBackdrop');
-  const modal = document.getElementById('modal');
+  const modalTop = document.getElementById('modalTop');
   const modalTitle = document.getElementById('modalTitle');
   const modalBody = document.getElementById('modalBody');
-  const modalClose = document.getElementById('modalClose');
-  const swipeHandle = document.getElementById('swipeHandle');
-  let startY = null, startX = null;
 
-  async function fetchLines(){
+  // fetch videos.txt
+  async function fetchTxt(){
     const r = await fetch('videos.txt?_=' + Date.now());
     if(!r.ok) throw new Error('Could not load videos.txt');
     const txt = await r.text();
     return txt.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
   }
 
-  function groupKeyFromTitle(title){
-    if(!title) return 'Other';
-    if(title.includes(' - ')) return title.split(' - ')[0].trim();
-    const sIdx = title.toLowerCase().indexOf('season');
-    if(sIdx !== -1){
-      const epIdx = title.toLowerCase().indexOf('episode');
-      if(epIdx !== -1) return title.substring(0, epIdx).trim();
-      return title.trim();
+  // parse into groups
+  function parseGroups(lines){
+    const groups = [];
+    let current = null;
+    for(const line of lines){
+      if(line.startsWith('#GROUP:') || line.startsWith('#group') ){
+        // format: #GROUP: Name | BannerURL
+        const rest = line.split(':')[1] || '';
+        const parts = rest.split('|').map(p=>p.trim());
+        const name = parts[0] || 'Untitled';
+        const banner = parts[1] || '';
+        current = { name, banner, items: [] };
+        groups.push(current);
+      } else {
+        // episode line: thumb | link | title
+        const parts = line.split('|').map(p=>p.trim());
+        if(parts.length >= 3){
+          const ep = { thumb: parts[0]||'', link: parts[1]||'', title: parts[2]||'Untitled' };
+          if(!current){
+            // if no group declared yet, create default
+            current = { name: 'Misc', banner: '', items: [] };
+            groups.push(current);
+          }
+          current.items.push(ep);
+        }
+      }
     }
-    return title.trim();
+    return groups;
   }
 
-  function clearChildren(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+  // render page
+  try {
+    const lines = await fetchTxt();
+    const groups = parseGroups(lines);
+    if(groups.length === 0){
+      loadingEl.textContent = 'No items found in videos.txt';
+      return;
+    }
 
-  function openModal(groupKey, items){
-    // populate modal
-    modalTitle.textContent = groupKey;
-    clearChildren(modalBody);
-    items.forEach((ep) => {
+    // hero = first group
+    const heroGroup = groups[0];
+    // create hero element (full poster image as-is)
+    const heroEl = document.createElement('section');
+    heroEl.className = 'hero';
+    heroEl.innerHTML = `
+      <img src="${heroGroup.banner || (heroGroup.items[0] && heroGroup.items[0].thumb) || ''}" alt="${heroGroup.name}">
+      <div class="hero-title">${heroGroup.name}</div>
+    `;
+    heroContainer.appendChild(heroEl);
+    // show animation
+    requestAnimationFrame(()=> heroEl.classList.add('show'));
+
+    // build groups list (each group gets its own banner + title)
+    groups.forEach((g, idx) => {
+      const groupEl = document.createElement('section');
+      groupEl.className = 'group';
+      groupEl.innerHTML = `
+        <div class="group-hero">
+          <img src="${g.banner || (g.items[0] && g.items[0].thumb) || ''}" alt="${g.name}">
+        </div>
+        <div class="group-title">${g.name} <span style="color:var(--muted); font-weight:400; font-size:13px; margin-left:8px;">${g.items.length} episode${g.items.length>1?'s':''}</span></div>
+      `;
+      // click opens modal full-screen (fullscreen modal with banner + episode list)
+      groupEl.addEventListener('click', ()=> openGroupModal(g));
+      groupsContainer.appendChild(groupEl);
+      // animate show
+      setTimeout(()=> groupEl.classList.add('show'), 120 * idx);
+    });
+
+    // hide loading
+    loadingEl.style.display = 'none';
+  } catch(err){
+    loadingEl.textContent = 'Error loading videos: ' + (err.message || err);
+    console.error(err);
+    return;
+  }
+
+  // open modal (fullscreen) for a group
+  function openGroupModal(group){
+    // sort newest on top (we assume file order; latest added should be on top if your videos.txt uses newest-first)
+    const items = group.items.slice().reverse(); // reverse so newest appears first
+    // top banner uses group's banner or first item thumb
+    const topImg = group.banner || (group.items[0] && group.items[0].thumb) || '';
+    modalTop.innerHTML = `<img src="${topImg}" alt="${group.name}">`;
+    modalTitle.textContent = group.name;
+    // build episode rows
+    modalBody.innerHTML = '';
+    for(const ep of items){
       const row = document.createElement('div');
       row.className = 'ep-row';
       row.innerHTML = `
-        <div class="ep-thumb"><img src="${ep.thumb}" alt="${ep.title}" onerror="this.src=''; this.parentElement.style.background='#0b0b0b'"></div>
+        <div class="ep-thumb"><img src="${ep.thumb}" alt="${ep.title}" onerror="this.style.display='none'; this.parentElement.style.background='#0b0b0b'"></div>
         <div class="ep-info">
           <div class="ep-title">${ep.title}</div>
           <div class="ep-sub">${ep.link.includes('mega.nz') ? 'MEGA (download)' : 'YouTube'}</div>
@@ -189,107 +229,32 @@
       // separator
       const sep = document.createElement('div'); sep.style.height='1px'; sep.style.background='rgba(255,255,255,0.02)'; sep.style.margin='8px 0';
       modalBody.appendChild(sep);
-    });
+    }
 
     // show modal
     modalBackdrop.classList.add('open');
-    modal.classList.add('open');
     modalBackdrop.setAttribute('aria-hidden','false');
-    // focus for accessibility
-    modalClose.focus();
-    // allow body scroll lock
+    // lock scroll
     document.body.style.overflow = 'hidden';
   }
 
-  function closeModal(){
-    modal.classList.remove('open');
-    modalBackdrop.classList.remove('open');
-    modalBackdrop.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
-    // Clear content to release memory
-    // setTimeout to allow animation
-    setTimeout(()=> clearChildren(modalBody), 280);
-  }
-
-  // tap outside to close
+  // close modal helpers: click outside, Escape
   modalBackdrop.addEventListener('click', function(e){
-    if(e.target === modalBackdrop) closeModal();
-  });
-  modalClose.addEventListener('click', closeModal);
-
-  // swipe down to close behavior (mobile)
-  modal.addEventListener('touchstart', function(e){
-    if(e.touches && e.touches.length === 1){
-      startY = e.touches[0].clientY;
-      startX = e.touches[0].clientX;
-    } else { startY = null; startX = null; }
-  }, {passive:true});
-  modal.addEventListener('touchend', function(e){
-    if(startY === null) return;
-    const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : null;
-    const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : null;
-    if(endY !== null && Math.abs(endX - startX) < 120 && endY - startY > 100){
-      closeModal();
+    if(e.target === modalBackdrop){
+      modalBackdrop.classList.remove('open');
+      modalBackdrop.setAttribute('aria-hidden','true');
+      modalBody.innerHTML = '';
+      document.body.style.overflow = '';
     }
-    startY = null; startX = null;
-  }, {passive:true});
-
-  // keyboard Escape to close
+  });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') closeModal();
-  });
-
-  try {
-    const lines = await fetchLines();
-    const ordered = lines.slice().reverse(); // newest first
-    const entries = ordered.map(line => {
-      const parts = line.split('|').map(p=>p.trim());
-      return { thumb: parts[0]||'', link: parts[1]||'', title: parts[2]||'Untitled' };
-    });
-
-    const map = new Map();
-    const groupOrder = [];
-    for(const e of entries){
-      const key = groupKeyFromTitle(e.title);
-      if(!map.has(key)){ map.set(key, []); groupOrder.push(key); }
-      map.get(key).push(e);
+    if(e.key === 'Escape'){
+      modalBackdrop.classList.remove('open');
+      modalBackdrop.setAttribute('aria-hidden','true');
+      modalBody.innerHTML = '';
+      document.body.style.overflow = '';
     }
-
-    // Build banners
-    groupOrder.forEach((key, idx) => {
-      const items = map.get(key) || [];
-      const heroThumb = items[0] && items[0].thumb ? items[0].thumb : '';
-
-      const groupEl = document.createElement('section');
-      groupEl.className = 'group';
-
-      const hero = document.createElement('div');
-      hero.className = 'group-hero';
-      hero.innerHTML = `
-        <div class="bg" style="background-image:url('${heroThumb}');"></div>
-        <div class="overlay"></div>
-        <div class="poster"><img src="${heroThumb}" alt="${key}" onerror="this.style.display='none'; this.parentElement.style.display='none'"></div>
-        <div class="meta">
-          <div class="title">${key}</div>
-          <div class="sub">${items.length} episode${items.length>1?'s':''}</div>
-        </div>
-        <div class="banner-click" data-key="${encodeURIComponent(key)}" aria-label="Open ${key}"></div>
-      `;
-      groupEl.appendChild(hero);
-      container.appendChild(groupEl);
-
-      // click to open modal (season)
-      const clickEl = hero.querySelector('.banner-click');
-      clickEl.addEventListener('click', function(){
-        openModal(key, items);
-      });
-
-    });
-
-  } catch(err){
-    container.innerHTML = `<div style="padding:20px; text-align:center; color:var(--muted);">Error loading videos: ${err.message || err}</div>`;
-    console.error(err);
-  }
+  });
 
 })();
 </script>
