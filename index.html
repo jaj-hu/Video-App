@@ -18,101 +18,89 @@
     header {display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;}
     .logo{font-weight:800; font-size:20px;}
     .subtitle{color:var(--muted); font-size:13px;}
-    /* Group card */
+
+    /* Group (banner) */
     .group {
       width:100%;
-      border-radius:14px;
       margin-bottom:18px;
+      border-radius:12px;
       overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));
+      position:relative;
       box-shadow: var(--card-shadow);
       border:1px solid rgba(255,255,255,0.03);
     }
-    /* Hero banner */
     .group-hero {
       position:relative;
       width:100%;
-      height:170px;
-      display:block;
+      height:280px;           /* user selected */
       overflow:hidden;
       background:#090909;
     }
     .group-hero .bg {
       position:absolute; inset:0; background-position:center; background-size:cover;
-      filter: blur(18px) saturate(1.05); transform:scale(1.05);
-      opacity:0.85;
+      filter: blur(18px) saturate(1.05); transform:scale(1.07);
+      opacity:0.84;
     }
     .group-hero .overlay {
       position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.65));
     }
     .group-hero .poster {
-      position:absolute; left:18px; top:50%; transform:translateY(-50%);
-      width:120px; height:160px; border-radius:10px; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.6); z-index:6;
+      position:absolute; left:22px; top:50%; transform:translateY(-50%);
+      width:140px; height:210px; border-radius:10px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.6); z-index:6;
       background:#000; display:flex; align-items:center; justify-content:center;
     }
     .group-hero .poster img { width:100%; height:100%; object-fit:cover; display:block; }
-
     .group-hero .meta {
-      position:absolute; left:150px; top:50%; transform:translateY(-50%); z-index:6; color:var(--white);
-      max-width:calc(100% - 180px); padding-right:16px;
+      position:absolute; left:180px; top:50%; transform:translateY(-50%); z-index:6; color:var(--white);
+      max-width:calc(100% - 220px); padding-right:18px;
     }
-    .group-hero .meta .title { font-size:20px; font-weight:800; margin-bottom:6px; }
+    .group-hero .meta .title { font-size:22px; font-weight:800; margin-bottom:6px; }
     .group-hero .meta .sub { color:var(--muted); font-size:13px; }
 
-    /* Header (click to expand) */
-    .group-header {
-      display:flex; align-items:center; justify-content:space-between; padding:12px 14px; cursor:pointer;
-      background:transparent; user-select:none; gap:12px;
-    }
-    .group-toggle {
-      width:36px; height:36px; border-radius:8px; background:rgba(255,255,255,0.02);
-      display:flex; align-items:center; justify-content:center; color:var(--muted);
-      transition: transform .28s ease;
-    }
-    .group-toggle.open { transform:rotate(180deg); color:var(--white); }
-
-    /* Panel animation */
-    .panel {
-      overflow:hidden;
-      transition: max-height .45s cubic-bezier(.2,.8,.2,1), opacity .35s ease;
-      opacity:0;
-      max-height:0;
-      padding:0 14px;
-      background:transparent;
-    }
-    .panel.open {
-      opacity:1;
-      max-height:2000px;
-      padding:8px 14px 16px 14px;
+    /* clickable banner overlay */
+    .banner-click {
+      position:absolute; inset:0; z-index:8; cursor:pointer;
     }
 
-    /* Episode row */
-    .episode-row {
-      display:flex; align-items:center; gap:12px; padding:10px 6px; border-radius:8px; transition: background .14s ease;
+    /* modal */
+    .modal-backdrop {
+      position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; z-index:2000; align-items:center; justify-content:center;
+      transition:opacity .22s ease;
     }
-    .episode-row:hover { background: rgba(255,255,255,0.02); }
-    .ep-thumb { width:86px; height:52px; border-radius:6px; overflow:hidden; flex:0 0 86px; background:#000; display:flex; align-items:center; justify-content:center; }
+    .modal-backdrop.open { display:flex; }
+    .modal {
+      width:92%; max-width:720px; background:var(--panel); border-radius:12px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,0.7);
+      transform:translateY(18px); transition:transform .25s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
+      max-height:86vh; display:flex; flex-direction:column;
+    }
+    .modal.open { transform:translateY(0); }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,0.03); }
+    .modal-title { font-size:18px; font-weight:800; }
+    .modal-close { background:transparent; color:var(--white); border:none; font-size:20px; cursor:pointer; padding:8px; border-radius:8px; }
+    .modal-body { overflow:auto; padding:14px; }
+
+    /* episode row in modal (medium poster) */
+    .ep-row { display:flex; gap:12px; align-items:center; padding:10px 6px; border-radius:8px; transition:background .12s ease; }
+    .ep-row:hover { background: rgba(255,255,255,0.02); }
+    .ep-thumb { width:120px; height:72px; border-radius:8px; overflow:hidden; flex:0 0 120px; background:#000; display:flex; align-items:center; justify-content:center; }
     .ep-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
     .ep-info { flex:1; min-width:0; }
-    .ep-title { font-size:15px; font-weight:700; color:var(--white); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .ep-sub { font-size:12px; color:var(--muted); }
-
-    .ep-actions { flex:0 0 auto; display:flex; gap:8px; align-items:center; }
+    .ep-title { font-size:15px; font-weight:700; color:var(--white); margin-bottom:6px; }
+    .ep-sub { font-size:13px; color:var(--muted); margin-bottom:6px; }
+    .ep-actions { display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex:0 0 auto; }
     .watch-btn {
       background:var(--accent); color:var(--white); padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:800; font-size:14px;
-      display:inline-flex; align-items:center; gap:8px;
     }
-    .download-btn { background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--white); padding:8px 10px; border-radius:8px; text-decoration:none; font-size:13px; }
+    .download-small { background:transparent; border:none; color:var(--muted); font-size:13px; cursor:pointer; text-decoration:underline; }
 
-    .sep { height:1px; background:rgba(255,255,255,0.02); margin:8px 0; border-radius:2px; }
+    /* swipe handle area on modal top */
+    .swipe-handle { width:44px; height:6px; border-radius:6px; background:rgba(255,255,255,0.06); margin:8px auto; }
 
-    /* responsive */
     @media (max-width:720px){
-      .group-hero { height:160px; }
-      .group-hero .poster { width:96px; height:128px; left:14px; }
-      .group-hero .meta { left:118px; }
-      .ep-thumb { width:76px; height:46px; }
-      .watch-btn { padding:9px 12px; font-size:13px; }
+      .group-hero { height:220px; }
+      .group-hero .poster { width:110px; height:160px; left:14px; }
+      .group-hero .meta { left:136px; }
+      .ep-thumb { width:100px; height:60px; }
     }
   </style>
 </head>
@@ -121,21 +109,42 @@
     <header>
       <div>
         <div class="logo">My Videos</div>
-        <div class="subtitle">Grouped by show — tap to expand</div>
+        <div class="subtitle">Tap a banner to open season</div>
       </div>
     </header>
 
     <main id="groupsContainer"></main>
 
     <div style="text-align:center; color:var(--muted); font-size:13px; margin-top:14px;">
-      Add new lines to <code>videos.txt</code> as: <br>
+      Add new lines to <code>videos.txt</code> as:<br>
       <code>THUMB_URL | LINK (YouTube or MEGA) | Anime Name Season X - Episode Y</code>
+    </div>
+  </div>
+
+  <!-- Modal structure (hidden until opened) -->
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+    <div id="modal" class="modal" role="dialog" aria-modal="true">
+      <div class="swipe-handle" id="swipeHandle"></div>
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Season</div>
+        <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- episodes injected here -->
+      </div>
     </div>
   </div>
 
 <script>
 (async function(){
   const container = document.getElementById('groupsContainer');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  const modalClose = document.getElementById('modalClose');
+  const swipeHandle = document.getElementById('swipeHandle');
+  let startY = null, startX = null;
 
   async function fetchLines(){
     const r = await fetch('videos.txt?_=' + Date.now());
@@ -156,33 +165,104 @@
     return title.trim();
   }
 
+  function clearChildren(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+
+  function openModal(groupKey, items){
+    // populate modal
+    modalTitle.textContent = groupKey;
+    clearChildren(modalBody);
+    items.forEach((ep) => {
+      const row = document.createElement('div');
+      row.className = 'ep-row';
+      row.innerHTML = `
+        <div class="ep-thumb"><img src="${ep.thumb}" alt="${ep.title}" onerror="this.src=''; this.parentElement.style.background='#0b0b0b'"></div>
+        <div class="ep-info">
+          <div class="ep-title">${ep.title}</div>
+          <div class="ep-sub">${ep.link.includes('mega.nz') ? 'MEGA (download)' : 'YouTube'}</div>
+        </div>
+        <div class="ep-actions">
+          <a class="watch-btn" href="player.html?url=${encodeURIComponent(ep.link)}&title=${encodeURIComponent(ep.title)}">▶ Watch</a>
+          <a class="download-small" href="${ep.link}" target="_blank" rel="noopener">Download</a>
+        </div>
+      `;
+      modalBody.appendChild(row);
+      // separator
+      const sep = document.createElement('div'); sep.style.height='1px'; sep.style.background='rgba(255,255,255,0.02)'; sep.style.margin='8px 0';
+      modalBody.appendChild(sep);
+    });
+
+    // show modal
+    modalBackdrop.classList.add('open');
+    modal.classList.add('open');
+    modalBackdrop.setAttribute('aria-hidden','false');
+    // focus for accessibility
+    modalClose.focus();
+    // allow body scroll lock
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(){
+    modal.classList.remove('open');
+    modalBackdrop.classList.remove('open');
+    modalBackdrop.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    // Clear content to release memory
+    // setTimeout to allow animation
+    setTimeout(()=> clearChildren(modalBody), 280);
+  }
+
+  // tap outside to close
+  modalBackdrop.addEventListener('click', function(e){
+    if(e.target === modalBackdrop) closeModal();
+  });
+  modalClose.addEventListener('click', closeModal);
+
+  // swipe down to close behavior (mobile)
+  modal.addEventListener('touchstart', function(e){
+    if(e.touches && e.touches.length === 1){
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+    } else { startY = null; startX = null; }
+  }, {passive:true});
+  modal.addEventListener('touchend', function(e){
+    if(startY === null) return;
+    const endY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : null;
+    const endX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : null;
+    if(endY !== null && Math.abs(endX - startX) < 120 && endY - startY > 100){
+      closeModal();
+    }
+    startY = null; startX = null;
+  }, {passive:true});
+
+  // keyboard Escape to close
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeModal();
+  });
+
   try {
     const lines = await fetchLines();
-    // We show newest first (reverse file order)
-    const ordered = lines.slice().reverse();
-
+    const ordered = lines.slice().reverse(); // newest first
     const entries = ordered.map(line => {
       const parts = line.split('|').map(p=>p.trim());
       return { thumb: parts[0]||'', link: parts[1]||'', title: parts[2]||'Untitled' };
     });
 
-    const groups = [];
     const map = new Map();
+    const groupOrder = [];
     for(const e of entries){
       const key = groupKeyFromTitle(e.title);
-      if(!map.has(key)){ map.set(key, []); groups.push(key); }
+      if(!map.has(key)){ map.set(key, []); groupOrder.push(key); }
       map.get(key).push(e);
     }
 
-    groups.forEach((key, idx) => {
+    // Build banners
+    groupOrder.forEach((key, idx) => {
       const items = map.get(key) || [];
-      // use first episode thumb as hero image (items[0] is newest-first)
       const heroThumb = items[0] && items[0].thumb ? items[0].thumb : '';
 
       const groupEl = document.createElement('section');
       groupEl.className = 'group';
 
-      // Hero
       const hero = document.createElement('div');
       hero.className = 'group-hero';
       hero.innerHTML = `
@@ -191,83 +271,26 @@
         <div class="poster"><img src="${heroThumb}" alt="${key}" onerror="this.style.display='none'; this.parentElement.style.display='none'"></div>
         <div class="meta">
           <div class="title">${key}</div>
-          <div class="sub">${items.length} episode${items.length>1? 's':''}</div>
+          <div class="sub">${items.length} episode${items.length>1?'s':''}</div>
         </div>
+        <div class="banner-click" data-key="${encodeURIComponent(key)}" aria-label="Open ${key}"></div>
       `;
       groupEl.appendChild(hero);
-
-      // Header (small, used to toggle)
-      const header = document.createElement('div');
-      header.className = 'group-header';
-      header.innerHTML = `
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div style="font-weight:700; font-size:16px;">${key}</div>
-          <div style="color:var(--muted); font-size:13px;">${items.length} ep${items.length>1?'s':''}</div>
-        </div>
-        <div class="group-toggle ${idx===0?'open':''}" aria-expanded="${idx===0? 'true':'false'}">▾</div>
-      `;
-      groupEl.appendChild(header);
-
-      // Panel with episodes
-      const panel = document.createElement('div');
-      panel.className = 'panel ' + (idx===0 ? 'open' : '');
-      items.forEach((ep, i) => {
-        const row = document.createElement('div');
-        row.className = 'episode-row';
-        row.innerHTML = `
-          <div class="ep-thumb"><img src="${ep.thumb}" alt="${ep.title}" onerror="this.src=''; this.parentElement.style.background='#0b0b0b'"></div>
-          <div class="ep-info">
-            <div class="ep-title">${ep.title}</div>
-            <div class="ep-sub">${ep.link.includes('mega.nz') ? 'MEGA (download)' : 'YouTube'}</div>
-          </div>
-          <div class="ep-actions">
-            <a class="watch-btn" href="player.html?url=${encodeURIComponent(ep.link)}&title=${encodeURIComponent(ep.title)}">▶ Watch</a>
-            <a class="download-btn" href="${ep.link}" target="_blank" rel="noopener">Download</a>
-          </div>
-        `;
-        panel.appendChild(row);
-        if(i < items.length-1){
-          const sep = document.createElement('div'); sep.className='sep'; panel.appendChild(sep);
-        }
-      });
-      groupEl.appendChild(panel);
       container.appendChild(groupEl);
 
-      // Toggle behavior: fade + slide
-      header.addEventListener('click', function(){
-        const isOpen = panel.classList.contains('open');
-        // close other panels
-        document.querySelectorAll('.panel.open').forEach(p=>{
-          if(p !== panel){
-            p.classList.remove('open');
-            const t = p.previousElementSibling.querySelector('.group-toggle');
-            if(t) t.classList.remove('open');
-            t && t.setAttribute('aria-expanded','false');
-            p.style.maxHeight = null;
-          }
-        });
-        if(isOpen){
-          panel.classList.remove('open');
-          header.querySelector('.group-toggle').classList.remove('open');
-          header.querySelector('.group-toggle').setAttribute('aria-expanded','false');
-        } else {
-          panel.classList.add('open');
-          header.querySelector('.group-toggle').classList.add('open');
-          header.querySelector('.group-toggle').setAttribute('aria-expanded','true');
-          panel.style.maxHeight = panel.scrollHeight + "px";
-          // scroll into view (nice UX on mobile)
-          setTimeout(()=> header.scrollIntoView({behavior:'smooth', block:'start'}), 260);
-        }
+      // click to open modal (season)
+      const clickEl = hero.querySelector('.banner-click');
+      clickEl.addEventListener('click', function(){
+        openModal(key, items);
       });
 
-      // ensure first open panel height
-      if(idx===0) panel.style.maxHeight = panel.scrollHeight + "px";
     });
 
   } catch(err){
     container.innerHTML = `<div style="padding:20px; text-align:center; color:var(--muted);">Error loading videos: ${err.message || err}</div>`;
     console.error(err);
   }
+
 })();
 </script>
 </body>
