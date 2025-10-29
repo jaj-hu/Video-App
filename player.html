@@ -1,77 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Video Player</title>
-  <style>
-    body {
-      margin: 0;
-      background-color: #000;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-    header {
-      background: #111;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-    }
-    header button {
-      background: #333;
-      border: none;
-      color: white;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-right: 10px;
-    }
-    iframe {
-      flex: 1;
-      width: 100%;
-      border: none;
-    }
-    .download {
-      background: #222;
-      padding: 10px;
-      text-align: center;
-    }
-    .download a {
-      background: #ff4444;
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Player</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
+<style>
+  body{margin:0;background:#000;color:#fff;font-family:Inter,Arial,system-ui}
+  .wrap{height:100vh;display:flex;flex-direction:column}
+  .top{padding:10px;display:flex;align-items:center;gap:12px}
+  .title{font-weight:700}
+  .player-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:12px}
+  .note{color:#aaa;font-size:13px;padding:8px;text-align:center}
+</style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="top">
+      <a href="index.html" style="color:#fff;text-decoration:none">← Home</a>
+      <div class="title" id="videoTitle">Loading…</div>
+    </div>
+    <div class="player-wrap" id="playerWrap">
+      <div id="player"></div>
+    </div>
+    <div id="note" class="note"></div>
+  </div>
 
-<header>
-  <button onclick="window.location.href='index.html'">← Back</button>
-  <div>Video Player</div>
-</header>
-
-<iframe id="videoFrame" allowfullscreen></iframe>
-
-<div class="download">
-  <a id="downloadLink" target="_blank">Download Video</a>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.js"></script>
 <script>
-  // Get Mega link from URL (player.html?url=MEGA_LINK)
+(function(){
   const params = new URLSearchParams(window.location.search);
-  const fileUrl = params.get('url');
+  const raw = params.get('url') || '';
+  const title = params.get('title') ? decodeURIComponent(params.get('title')) : '';
+  const videoTitle = document.getElementById('videoTitle');
+  const note = document.getElementById('note');
 
-  // Auto convert /file/ to /embed/
-  const embedUrl = fileUrl.replace('/file/', '/embed/');
+  function extractYouTubeID(url){
+    if(!url) return '';
+    url = url.trim();
+    const short = url.match(/youtu\.be\/([A-Za-z0-9_-]{4,})/);
+    if(short && short[1]) return short[1];
+    try {
+      const u = new URL(url);
+      if(u.searchParams && u.searchParams.get('v')) return u.searchParams.get('v');
+      const emb = url.match(/\/embed\/([A-Za-z0-9_-]{4,})/);
+      if(emb && emb[1]) return emb[1];
+    } catch(e){}
+    return '';
+  }
 
-  document.getElementById('videoFrame').src = embedUrl;
-  document.getElementById('downloadLink').href = fileUrl;
+  videoTitle.textContent = title || 'Video';
+
+  const id = extractYouTubeID(raw);
+  if(id){
+    // YouTube via Plyr
+    const playerDiv = document.getElementById('player');
+    playerDiv.innerHTML = `<div data-plyr-provider="youtube" data-plyr-embed-id="${id}"></div>`;
+    const plyr = new Plyr('#player', {controls:['play','progress','current-time','mute','volume','fullscreen'], autoplay:false, hideControls:true, seekTime:10});
+    note.textContent = '';
+  } else if(raw && raw.includes('mega.nz')){
+    // open MEGA page (downloads / MEGA viewer)
+    note.innerHTML = 'This is a MEGA link — it will open the MEGA page where users can download or play. If you want in-app playback, host a direct MP4 or use YouTube unlisted.';
+    // open MEGA in same tab so user stays in-app webview (you can change to _blank)
+    setTimeout(()=> { window.location.href = raw; }, 1200);
+  } else if(raw){
+    // Try direct video file
+    const playerDiv = document.getElementById('player');
+    playerDiv.innerHTML = `<video id="v" controls playsinline style="width:100%;max-width:1000px"><source src="${raw}"></video>`;
+    const plyr = new Plyr('#v', {controls:['play','progress','current-time','mute','volume','fullscreen'], autoplay:false, hideControls:true, seekTime:10});
+    note.textContent = '';
+  } else {
+    note.textContent = 'Invalid or missing video link.';
+  }
+})();
 </script>
-
 </body>
 </html>
